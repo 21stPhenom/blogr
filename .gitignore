@@ -1,0 +1,7 @@
+.env
+blog_env/
+db.sqlite3
+__pycache__/
+*.pyc
+user-details.txt
+dev_script.sh
