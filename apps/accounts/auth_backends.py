@@ -1,6 +1,9 @@
 import jwt
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
 from rest_framework.exceptions import AuthenticationFailed
+from drf_spectacular.extensions import OpenApiAuthenticationExtension
+from drf_spectacular.plumbing import build_bearer_security_scheme_object
+
 
 from apps.accounts.models import CustomUser
 from config.settings import SECRET_KEY
@@ -45,3 +48,15 @@ class JWTAuthentication(BaseAuthentication):
             raise AuthenticationFailed(msg)
 
         return (user, None)
+
+
+class JWTScheme(OpenApiAuthenticationExtension):
+    target_class = JWTAuthentication
+    name = "jwtAuth"
+    match_subclasses = True
+    priority = -1
+
+    def get_security_definition(self, auto_schema):
+        return build_bearer_security_scheme_object(
+            header_name="Authorization", token_prefix=self.target.keyword
+        )

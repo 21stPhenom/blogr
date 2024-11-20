@@ -6,6 +6,8 @@ django-cors-headers==4.5.0
 django-decouple==2.1
 django-rest-framework==0.1.0
 djangorestframework==3.15.2
+drf-spectacular==0.27.2
+drf-spectacular-sidecar==2024.7.1
 gunicorn==23.0.0
 inflection==0.5.1
 jsonschema==4.23.0

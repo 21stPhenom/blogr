@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "apps.accounts.apps.AccountsConfig",
+    'drf_spectacular',
+    'drf_spectacular_sidecar'
 ]
 
 MIDDLEWARE = [
@@ -77,12 +79,12 @@ if DATABASE_ENVIRONMENT == "local":
     }
 else:
     DATABASE_URL = config("DATABASE_URL")
-    DATABASES = {"default": dj_database_url.parse()}
+    DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.authw.password_validation.UserAttributeSimilarityValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -130,4 +132,15 @@ CACHES = {
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["apps.accounts.auth_backends.JWTAuthentication"],
+    "DEFAULT_SCHEMA_CLASS": 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Blogr API',
+    'DESCRIPTION': 'A simple microblogging platform API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR'
 }
