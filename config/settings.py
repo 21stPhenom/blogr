@@ -79,12 +79,12 @@ if DATABASE_ENVIRONMENT == "local":
     }
 else:
     DATABASE_URL = config("DATABASE_URL")
-    DATABASES = {"default": dj_database_url.parse()}
+    DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.authw.password_validation.UserAttributeSimilarityValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
