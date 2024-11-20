@@ -2,21 +2,25 @@ import jwt
 
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from config.responses import api_response
 
 from config import settings
+from config.responses import api_response
 from config.utils import generate_otp, otp_exists, send_otp_mail
 from apps.accounts.models import CustomUser
-from apps.accounts.v1.serializers import inputs
+from apps.accounts.v1.serializers import inputs, outputs
 
 
 class Register(APIView):
     model = CustomUser
     serializer_class = inputs.CustomUserSerializer
 
+    @extend_schema(
+        responses={201: outputs.UserResponse, 400: outputs.ApiResponse},
+    )
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -29,6 +33,7 @@ class Login(APIView):
     model = CustomUser
     serializer_class = inputs.LoginSerializer
 
+    @extend_schema(responses={200: outputs.LoginResponse, 400: outputs.ApiResponse})
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -61,6 +66,9 @@ class ForgotPassword(APIView):
     model = CustomUser
     serializer_class = inputs.ForgotPasswordSerializer
 
+    @extend_schema(
+        responses={200: outputs.ApiResponse, 400: outputs.ApiResponse}
+    )
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -79,6 +87,9 @@ class ResetPassword(APIView):
     model = CustomUser
     serializer_class = inputs.ResetPasswordSerializer
 
+    @extend_schema(
+        responses={200: outputs.ApiResponse, 400: outputs.ApiResponse}
+    )
     def post(self, request, *args, **kwargs):
         serializer = self.serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -104,12 +115,18 @@ class Account(APIView):
     serializer_class = inputs.CustomUserSerializer
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        responses={200: outputs.UserResponse, 400: outputs.ApiResponse},
+    )
     def get(self, request, *args, **kwargs):
         user = request.user
         serializer = self.serializer_class(user)
 
         return api_response(status.HTTP_200_OK, message="success", data=serializer.data)
 
+    @extend_schema(
+        responses={200: outputs.UserResponse, 400: outputs.ApiResponse},
+    )
     def put(self, request, *args, **kwargs):
         user = request.user
         serializer = self.serializer_class(
@@ -135,6 +152,9 @@ class Follow(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = inputs.CustomUserSerializer
 
+    @extend_schema(
+        responses={200: outputs.UserResponse, 400: outputs.ApiResponse},
+    )
     def get(self, request, username, *args, **kwargs):
         current_user: CustomUser = request.user
         if current_user.username == username:
@@ -160,6 +180,9 @@ class Unfollow(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = inputs.CustomUserSerializer
 
+    @extend_schema(
+        responses={200: outputs.UserResponse, 400: outputs.ApiResponse},
+    )
     def get(self, request, username, *args, **kwargs):
         current_user: CustomUser = request.user
 
