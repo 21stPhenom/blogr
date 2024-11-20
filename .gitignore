@@ -5,3 +5,4 @@ __pycache__/
 *.pyc
 user-details.txt
 dev_script.sh
+schema.yml
