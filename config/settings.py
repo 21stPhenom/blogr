@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "apps.accounts.apps.AccountsConfig",
-    "apps.blogs.apps.BlogConfig",
+    "apps.blog.apps.BlogConfig",
     "drf_spectacular",
     "drf_spectacular_sidecar",
 ]
