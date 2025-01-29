@@ -4,6 +4,19 @@ from apps.accounts.models import CustomUser
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    
+    following = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="username"
+    )
+    
+    followers = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="username"
+    )
+    
     class Meta:
         model = CustomUser
         fields = "__all__"
@@ -21,8 +34,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": True},
             "bio": {"required": False},
-            "followers": {"source": "username"},
-            "following": {"source": "username"},
         }
 
     def create(self, validated_data, *args, **kwargs):
